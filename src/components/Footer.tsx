@@ -1,6 +1,6 @@
 import React from 'react';
 import { RoyalEmblem } from './RoyalEmblem';
-import { Crown, ShieldCheck, Phone, Mail, MapPin, Heart } from 'lucide-react';
+import { Crown, ShieldCheck, Phone, Mail, MapPin, Heart, Share2 } from 'lucide-react';
 
 interface FooterProps {
   onNavigate: (tab: string) => void;
@@ -8,6 +8,7 @@ interface FooterProps {
   onOpenTerms: () => void;
   onOpenConsultant: () => void;
   onOpenRegister: () => void;
+  onOpenShare?: () => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({
@@ -15,7 +16,8 @@ export const Footer: React.FC<FooterProps> = ({
   onOpenPrivacy,
   onOpenTerms,
   onOpenConsultant,
-  onOpenRegister
+  onOpenRegister,
+  onOpenShare
 }) => {
   return (
     <footer className="bg-[#4D0610] text-stone-300 border-t-2 border-[#D4AF37]/50 pt-12 pb-24 lg:pb-12 text-xs">
@@ -96,6 +98,14 @@ export const Footer: React.FC<FooterProps> = ({
                   Matrimonial Code of Conduct
                 </button>
               </li>
+              {onOpenShare && (
+                <li>
+                  <button onClick={onOpenShare} className="text-[#ECC86A] font-semibold hover:underline flex items-center space-x-1">
+                    <Share2 className="w-3.5 h-3.5" />
+                    <span>Share Website Link</span>
+                  </button>
+                </li>
+              )}
               <li>
                 <span className="text-stone-400">Horoscope Matching Assistance</span>
               </li>

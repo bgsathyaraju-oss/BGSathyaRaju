@@ -12,10 +12,12 @@ import {
   Mail, 
   User, 
   HeartHandshake,
-  AlertCircle
+  AlertCircle,
+  Calendar
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { Gender, MaritalStatus } from '../types/matrimony';
+import { calculateAge, formatFullDob } from '../utils/dateUtils';
 
 interface RegisterModalProps {
   isOpen: boolean;
@@ -39,6 +41,8 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
   const [photoUrl, setPhotoUrl] = useState('');
   const [age, setAge] = useState(25);
   const [dateOfBirth, setDateOfBirth] = useState('2001-01-01');
+  const [timeOfBirth, setTimeOfBirth] = useState('');
+  const [placeOfBirth, setPlaceOfBirth] = useState('');
   const [gender, setGender] = useState<Gender>('bride');
   const [surname, setSurname] = useState('Vadiyaraju');
   const [fatherName, setFatherName] = useState('');
@@ -81,6 +85,12 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
 
   const handleRemoveLanguage = (lang: string) => {
     setLanguagesKnown(languagesKnown.filter(l => l !== lang));
+  };
+
+  const handleDobChange = (newDob: string) => {
+    setDateOfBirth(newDob);
+    const computed = calculateAge(newDob);
+    setAge(computed);
   };
 
   const validateStep1 = () => {
@@ -157,6 +167,8 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
           gender,
           age: Number(age),
           dateOfBirth,
+          timeOfBirth,
+          placeOfBirth,
           surname,
           fatherName,
           motherName,
@@ -308,33 +320,87 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
                   />
                 </div>
 
-                {/* 3. Age & Date of Birth */}
-                <div>
-                  <label className="text-xs font-semibold text-stone-700 block mb-1">
-                    3. Age *
-                  </label>
-                  <input
-                    type="number"
-                    min="18"
-                    max="70"
-                    required
-                    value={age}
-                    onChange={(e) => setAge(Number(e.target.value))}
-                    className="w-full text-xs p-2.5 bg-white border border-stone-300 rounded-xl focus:ring-1 focus:ring-amber-500"
-                  />
-                </div>
+                {/* 3. Date of Birth & Age */}
+                <div className="sm:col-span-2 bg-amber-50/60 p-4 rounded-2xl border border-amber-200 space-y-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+                    <label className="text-xs font-bold text-stone-800 flex items-center space-x-1.5">
+                      <Calendar className="w-4 h-4 text-[#8A1022]" />
+                      <span>3. Date of Birth (పుట్టిన తేదీ) & Age *</span>
+                    </label>
+                    {dateOfBirth && (
+                      <span className="text-[11px] font-semibold text-[#8A1022] bg-white px-2.5 py-1 rounded-lg border border-amber-300 shadow-xs">
+                        {formatFullDob(dateOfBirth)} • Calculated Age: <strong className="text-stone-900">{age} Yrs</strong>
+                      </span>
+                    )}
+                  </div>
 
-                <div>
-                  <label className="text-xs font-semibold text-stone-700 block mb-1">
-                    Date of Birth *
-                  </label>
-                  <input
-                    type="date"
-                    required
-                    value={dateOfBirth}
-                    onChange={(e) => setDateOfBirth(e.target.value)}
-                    className="w-full text-xs p-2.5 bg-white border border-stone-300 rounded-xl focus:ring-1 focus:ring-amber-500"
-                  />
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div className="sm:col-span-2">
+                      <label className="text-[11px] font-semibold text-stone-600 block mb-1">
+                        Select Date of Birth *
+                      </label>
+                      <input
+                        type="date"
+                        required
+                        max={new Date(Date.now() - 18 * 365.25 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
+                        min="1950-01-01"
+                        value={dateOfBirth}
+                        onChange={(e) => handleDobChange(e.target.value)}
+                        className="w-full text-xs p-2.5 bg-white border border-stone-300 rounded-xl focus:ring-1 focus:ring-amber-500 font-medium"
+                      />
+                      <span className="text-[10px] text-stone-500 mt-1 block">
+                        Age is automatically calculated from the chosen birth date.
+                      </span>
+                    </div>
+
+                    <div>
+                      <label className="text-[11px] font-semibold text-stone-600 block mb-1">
+                        Age (Years) *
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="number"
+                          min="18"
+                          max="75"
+                          required
+                          value={age}
+                          onChange={(e) => setAge(Number(e.target.value))}
+                          className="w-full text-xs p-2.5 bg-white border border-stone-300 rounded-xl focus:ring-1 focus:ring-amber-500 font-bold text-stone-800"
+                        />
+                        <span className="absolute right-3 top-2.5 text-xs text-stone-400 font-semibold pointer-events-none">
+                          Yrs
+                        </span>
+                      </div>
+                      <span className="text-[10px] text-stone-500 mt-1 block">Auto-verified</span>
+                    </div>
+                  </div>
+
+                  {/* Optional Time and Place of Birth for Horoscope / Kundali Matching */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-amber-200/60">
+                    <div>
+                      <label className="text-[11px] font-semibold text-stone-700 block mb-1">
+                        Time of Birth (Optional - for Horoscope)
+                      </label>
+                      <input
+                        type="time"
+                        value={timeOfBirth}
+                        onChange={(e) => setTimeOfBirth(e.target.value)}
+                        className="w-full text-xs p-2 bg-white border border-stone-300 rounded-xl focus:ring-1 focus:ring-amber-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[11px] font-semibold text-stone-700 block mb-1">
+                        Place of Birth (Janma Sthalam - Optional)
+                      </label>
+                      <input
+                        type="text"
+                        value={placeOfBirth}
+                        onChange={(e) => setPlaceOfBirth(e.target.value)}
+                        placeholder="e.g. Bhimavaram / Rajahmundry"
+                        className="w-full text-xs p-2 bg-white border border-stone-300 rounded-xl focus:ring-1 focus:ring-amber-500"
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 {/* 6. Father's Name */}

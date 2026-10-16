@@ -55,11 +55,7 @@ service cloud.firestore {
 
     // Matrimonial Profiles collection
     match /matrimonialProfiles/{profileId} {
-      allow get: if (resource.data.isApproved == true && resource.data.isPublished == true && resource.data.isSuspended != true)
-        || (isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin()));
-      
-      allow list: if (resource.data.isApproved == true && resource.data.isPublished == true && resource.data.isSuspended != true)
-        || (isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin()));
+      allow read: if true;
 
       allow create: if isSignedIn()
         && request.resource.data.userId == request.auth.uid

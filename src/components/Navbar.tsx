@@ -14,7 +14,8 @@ import {
   Crown,
   ChevronDown,
   CheckCircle2,
-  SlidersHorizontal
+  SlidersHorizontal,
+  Share2
 } from 'lucide-react';
 import { RoyalEmblem } from './RoyalEmblem';
 import { useAuth } from '../context/AuthContext';
@@ -30,6 +31,7 @@ interface NavbarProps {
   onOpenPreferences: () => void;
   onOpenAdmin: () => void;
   onOpenConsultant: () => void;
+  onOpenShare: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -40,7 +42,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenShortlist,
   onOpenPreferences,
   onOpenAdmin,
-  onOpenConsultant
+  onOpenConsultant,
+  onOpenShare
 }) => {
   const { currentUser, currentProfile, isAdmin, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -86,11 +89,20 @@ export const Navbar: React.FC<NavbarProps> = ({
   return (
     <header className="sticky top-0 z-40 bg-[#680916] text-white shadow-xl border-b border-[#D4AF37]/40">
       {/* Top Royal Announcement Bar */}
-      <div className="bg-[#4D0610] text-[#F3E5AB] text-xs py-1.5 px-4 text-center font-medium tracking-wider flex items-center justify-center space-x-2 border-b border-[#D4AF37]/20">
-        <Crown className="w-3.5 h-3.5 text-[#D4AF37]" />
-        <span>Exclusive, Verified Matrimony for the Suryavamsha Vadiyaraju Kshatriya Community</span>
-        <span className="hidden md:inline text-[#D4AF37]">•</span>
-        <span className="hidden md:inline">Helpline: +91 98490 23456</span>
+      <div className="bg-[#4D0610] text-[#F3E5AB] text-xs py-1.5 px-4 text-center font-medium tracking-wider flex items-center justify-between sm:justify-center flex-wrap gap-1 border-b border-[#D4AF37]/20">
+        <div className="flex items-center space-x-2">
+          <Crown className="w-3.5 h-3.5 text-[#D4AF37]" />
+          <span>Exclusive, Verified Matrimony for the Suryavamsha Vadiyaraju Kshatriya Community</span>
+          <span className="hidden md:inline text-[#D4AF37]">•</span>
+          <span className="hidden md:inline">Helpline: +91 98490 23456</span>
+        </div>
+        <button
+          onClick={onOpenShare}
+          className="px-2.5 py-0.5 bg-[#680916] hover:bg-[#800D1E] text-[#ECC86A] text-[11px] font-bold rounded-md border border-[#D4AF37]/50 inline-flex items-center space-x-1 transition-colors shadow-xs"
+        >
+          <Share2 className="w-3 h-3" />
+          <span>Website Link</span>
+        </button>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -179,8 +191,18 @@ export const Navbar: React.FC<NavbarProps> = ({
           </nav>
 
           {/* Right Action Icons & Auth Profile */}
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2 sm:space-x-3">
             
+            {/* Share Website Link Button */}
+            <button
+              onClick={onOpenShare}
+              title="Share Website Link"
+              className="p-2 rounded-full text-[#F3E5AB] hover:bg-[#800D1E] transition-colors relative flex items-center space-x-1 border border-[#D4AF37]/30 bg-[#570712]/50"
+            >
+              <Share2 className="w-4 h-4 text-[#ECC86A]" />
+              <span className="hidden xl:inline text-xs font-semibold text-[#F3E5AB]">Share Link</span>
+            </button>
+
             {/* Shortlist Button */}
             {currentUser && (
               <button
@@ -444,6 +466,14 @@ export const Navbar: React.FC<NavbarProps> = ({
               My Matrimonial Profile
             </button>
           )}
+          <button
+            onClick={() => { onOpenShare(); setMobileMenuOpen(false); }}
+            className="w-full text-left px-3 py-2 rounded-lg text-sm font-semibold text-[#ECC86A] bg-[#680916] hover:bg-[#800D1E] flex items-center space-x-2 border border-[#D4AF37]/30"
+          >
+            <Share2 className="w-4 h-4 text-[#ECC86A]" />
+            <span>Share Website Link</span>
+          </button>
+
           {isAdmin && (
             <button
               onClick={() => { onOpenAdmin(); setMobileMenuOpen(false); }}

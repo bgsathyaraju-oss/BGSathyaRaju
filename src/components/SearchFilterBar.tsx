@@ -123,7 +123,7 @@ export const SearchFilterBar: React.FC<SearchFilterBarProps> = ({
       {showAdvanced && (
         <div className="pt-4 border-t border-stone-100 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs animate-in fade-in">
           
-          {/* Age Bounds */}
+          {/* Age Bounds & Birth Year */}
           <div>
             <label className="font-semibold text-stone-700 block mb-1">
               Age Range: {filters.ageMin || 18} - {filters.ageMax || 65} Yrs
@@ -149,6 +149,9 @@ export const SearchFilterBar: React.FC<SearchFilterBarProps> = ({
                 className="w-1/2 p-2 bg-stone-50 border border-stone-300 rounded-xl"
               />
             </div>
+            <span className="text-[10px] text-stone-500 mt-1 block">
+              Born approx {new Date().getFullYear() - (filters.ageMax || 65)} - {new Date().getFullYear() - (filters.ageMin || 18)}
+            </span>
           </div>
 
           {/* Native Place */}

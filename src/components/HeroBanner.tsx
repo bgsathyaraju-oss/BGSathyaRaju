@@ -8,7 +8,8 @@ import {
   Users, 
   ArrowRight,
   Sparkles,
-  CheckCircle2
+  CheckCircle2,
+  Share2
 } from 'lucide-react';
 import { RoyalEmblem } from './RoyalEmblem';
 import { Gender, ProfileFilters } from '../types/matrimony';
@@ -16,12 +17,14 @@ import { Gender, ProfileFilters } from '../types/matrimony';
 interface HeroBannerProps {
   onSearch: (filters: Partial<ProfileFilters>) => void;
   onOpenRegister: () => void;
+  onOpenShare?: () => void;
   totalProfilesCount: number;
 }
 
 export const HeroBanner: React.FC<HeroBannerProps> = ({
   onSearch,
   onOpenRegister,
+  onOpenShare,
   totalProfilesCount
 }) => {
   const [lookingFor, setLookingFor] = useState<Gender>('bride');
@@ -117,6 +120,16 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
               >
                 Browse Grooms (వరులు)
               </button>
+
+              {onOpenShare && (
+                <button
+                  onClick={onOpenShare}
+                  className="px-5 py-3 rounded-xl text-xs font-bold text-[#D4AF37] bg-[#4D0610] hover:bg-[#680916] border border-[#D4AF37] shadow-md transition-all flex items-center space-x-1.5"
+                >
+                  <Share2 className="w-4 h-4 text-[#ECC86A]" />
+                  <span>Share Website Link</span>
+                </button>
+              )}
             </div>
 
           </div>

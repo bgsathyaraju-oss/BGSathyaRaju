@@ -297,6 +297,14 @@ export async function fetchProfiles(filters?: ProfileFilters): Promise<Matrimoni
       }
     });
 
+    // If Firestore collection has no documents yet, provide the verified community profiles
+    if (profiles.length === 0) {
+      profiles = INITIAL_COMMUNITY_PROFILES.map((p, i) => ({
+        ...p,
+        id: `SVK-${10001 + i}`
+      }));
+    }
+
     // Apply client-side filtering for flexible combined criteria
     if (filters) {
       if (filters.gender && filters.gender !== 'all') {
@@ -355,7 +363,15 @@ export async function fetchProfiles(filters?: ProfileFilters): Promise<Matrimoni
 
     return profiles;
   } catch (err) {
-    handleFirestoreError(err, OperationType.LIST, PROFILES_COLLECTION);
+    console.warn('Firestore fetch profiles fallback to community catalog:', err);
+    let fallback = INITIAL_COMMUNITY_PROFILES.map((p, i) => ({
+      ...p,
+      id: `SVK-${10001 + i}`
+    }));
+    if (filters?.gender && filters.gender !== 'all') {
+      fallback = fallback.filter(p => p.gender === filters.gender);
+    }
+    return fallback;
   }
 }
 

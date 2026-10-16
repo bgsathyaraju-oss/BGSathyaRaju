@@ -34,6 +34,7 @@ import { InterestsView } from './components/InterestsView';
 import { MyProfileView } from './components/MyProfileView';
 import { AdminPanel } from './components/AdminPanel';
 import { PrivacyPolicyModal, TermsModal } from './components/LegalModals';
+import { ShareWebsiteModal } from './components/ShareWebsiteModal';
 import { Footer } from './components/Footer';
 import { 
   fetchProfiles, 
@@ -75,6 +76,7 @@ function MainApp() {
   const [adminModalOpen, setAdminModalOpen] = useState(false);
   const [privacyModalOpen, setPrivacyModalOpen] = useState(false);
   const [termsModalOpen, setTermsModalOpen] = useState(false);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
 
   // Initialize and Seed Profiles
   useEffect(() => {
@@ -247,6 +249,7 @@ function MainApp() {
         onOpenPreferences={() => setPreferencesModalOpen(true)}
         onOpenAdmin={() => setAdminModalOpen(true)}
         onOpenConsultant={() => setConsultantModalOpen(true)}
+        onOpenShare={() => setShareModalOpen(true)}
       />
 
       {/* Main Content Areas */}
@@ -260,6 +263,7 @@ function MainApp() {
             <HeroBanner
               onSearch={handleHeroSearch}
               onOpenRegister={() => setRegisterModalOpen(true)}
+              onOpenShare={() => setShareModalOpen(true)}
               totalProfilesCount={profiles.length}
             />
 
@@ -557,6 +561,7 @@ function MainApp() {
         onOpenTerms={() => setTermsModalOpen(true)}
         onOpenConsultant={() => setConsultantModalOpen(true)}
         onOpenRegister={() => setRegisterModalOpen(true)}
+        onOpenShare={() => setShareModalOpen(true)}
       />
 
       {/* Mobile Sticky Bottom Navigation Bar */}
@@ -570,6 +575,7 @@ function MainApp() {
         onOpenPrivacy={() => setPrivacyModalOpen(true)}
         onOpenTerms={() => setTermsModalOpen(true)}
         onOpenAdmin={() => setAdminModalOpen(true)}
+        onOpenShare={() => setShareModalOpen(true)}
       />
 
       {/* MODALS */}
@@ -652,6 +658,12 @@ function MainApp() {
       <TermsModal
         isOpen={termsModalOpen}
         onClose={() => setTermsModalOpen(false)}
+      />
+
+      {/* 9. Share Website Modal */}
+      <ShareWebsiteModal
+        isOpen={shareModalOpen}
+        onClose={() => setShareModalOpen(false)}
       />
 
     </div>

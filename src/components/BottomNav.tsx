@@ -15,7 +15,8 @@ import {
   FileText, 
   LogOut,
   X,
-  Crown
+  Crown,
+  Share2
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -29,6 +30,7 @@ interface BottomNavProps {
   onOpenPrivacy: () => void;
   onOpenTerms: () => void;
   onOpenAdmin: () => void;
+  onOpenShare: () => void;
 }
 
 export const BottomNav: React.FC<BottomNavProps> = ({
@@ -40,7 +42,8 @@ export const BottomNav: React.FC<BottomNavProps> = ({
   onOpenConsultant,
   onOpenPrivacy,
   onOpenTerms,
-  onOpenAdmin
+  onOpenAdmin,
+  onOpenShare
 }) => {
   const { currentUser, isAdmin, logout } = useAuth();
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -184,6 +187,17 @@ export const BottomNav: React.FC<BottomNavProps> = ({
               >
                 <PhoneCall className="w-5 h-5 text-[#8A1022]" />
                 <span>Marriage Consultant Service</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  onOpenShare();
+                  setDrawerOpen(false);
+                }}
+                className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-amber-50 hover:bg-amber-100 text-[#680916] text-sm font-bold border border-amber-200"
+              >
+                <Share2 className="w-5 h-5 text-[#8A1022]" />
+                <span>Share Website Link</span>
               </button>
 
               {isAdmin && (

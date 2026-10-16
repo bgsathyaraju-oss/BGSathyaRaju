@@ -18,11 +18,13 @@ import {
   DollarSign,
   AlertTriangle,
   Lock,
-  MessageSquare
+  MessageSquare,
+  Clock
 } from 'lucide-react';
 import { MatrimonialProfile } from '../types/matrimony';
 import { useAuth } from '../context/AuthContext';
 import { submitReport } from '../services/reportService';
+import { formatFullDob, formatDateOfBirth } from '../utils/dateUtils';
 
 interface ProfileDetailModalProps {
   profile: MatrimonialProfile | null;
@@ -380,15 +382,35 @@ export const ProfileDetailModal: React.FC<ProfileDetailModalProps> = ({
                   </div>
                 </div>
 
-                {/* Date of Birth */}
+                {/* Date of Birth & Astrological Details */}
                 <div className="bg-white p-4 rounded-xl border border-stone-200 space-y-2">
                   <div className="flex items-center space-x-2 text-xs font-bold text-[#680916]">
                     <Calendar className="w-4 h-4" />
-                    <span>Birth Details</span>
+                    <span>Date of Birth & Astrological Details</span>
                   </div>
-                  <div className="text-xs text-stone-700">
-                    <div><strong>Date of Birth:</strong> {profile.dateOfBirth}</div>
-                    <div className="text-stone-500 mt-1">Horoscope available upon family request.</div>
+                  <div className="text-xs text-stone-700 space-y-1.5">
+                    <div>
+                      <strong>Date of Birth:</strong> {formatFullDob(profile.dateOfBirth)}
+                    </div>
+                    <div>
+                      <strong>Age:</strong> {profile.age} Years
+                    </div>
+                    {profile.timeOfBirth && (
+                      <div className="flex items-center space-x-1">
+                        <Clock className="w-3 h-3 text-stone-400" />
+                        <span><strong>Time of Birth:</strong> {profile.timeOfBirth}</span>
+                      </div>
+                    )}
+                    {profile.placeOfBirth && (
+                      <div>
+                        <strong>Place of Birth (Janma Sthalam):</strong> {profile.placeOfBirth}
+                      </div>
+                    )}
+                    <div className="pt-1">
+                      <span className="inline-block px-2 py-0.5 bg-amber-50 text-amber-900 border border-amber-200 rounded text-[10px] font-medium">
+                        ✓ Kundali / Horoscope available on family exchange
+                      </span>
+                    </div>
                   </div>
                 </div>
 

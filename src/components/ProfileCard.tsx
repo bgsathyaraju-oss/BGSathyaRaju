@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { MatrimonialProfile } from '../types/matrimony';
 import { useAuth } from '../context/AuthContext';
+import { formatDateOfBirth } from '../utils/dateUtils';
 
 interface ProfileCardProps {
   profile: MatrimonialProfile;
@@ -105,6 +106,11 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
             <p className="text-xs text-stone-600 font-medium">
               {profile.age} Yrs • {profile.height}
             </p>
+            {profile.dateOfBirth && (
+              <p className="text-[11px] text-stone-500 mt-0.5">
+                DOB: <strong className="text-stone-700">{formatDateOfBirth(profile.dateOfBirth)}</strong>
+              </p>
+            )}
 
             <div className="mt-1.5 inline-flex items-center space-x-1 text-[11px] bg-amber-50 text-amber-900 px-2 py-0.5 rounded-md font-semibold border border-amber-200/70">
               <Flame className="w-3 h-3 text-amber-600" />

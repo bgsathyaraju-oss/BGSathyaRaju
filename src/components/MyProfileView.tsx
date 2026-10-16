@@ -13,10 +13,12 @@ import {
   MapPin, 
   GraduationCap, 
   Briefcase,
-  AlertCircle
+  AlertCircle,
+  Calendar
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { MatrimonialProfile, PrivateContact } from '../types/matrimony';
+import { calculateAge, formatDateOfBirth, formatFullDob } from '../utils/dateUtils';
 
 interface MyProfileViewProps {
   onOpenPreferences: () => void;
@@ -36,8 +38,17 @@ export const MyProfileView: React.FC<MyProfileViewProps> = ({
   // Form states initialized from current profile
   const [fullName, setFullName] = useState(currentProfile?.fullName || '');
   const [photoUrl, setPhotoUrl] = useState(currentProfile?.photoUrl || '');
+  const [dateOfBirth, setDateOfBirth] = useState(currentProfile?.dateOfBirth || '2000-01-01');
+  const [timeOfBirth, setTimeOfBirth] = useState(currentProfile?.timeOfBirth || '');
+  const [placeOfBirth, setPlaceOfBirth] = useState(currentProfile?.placeOfBirth || '');
   const [age, setAge] = useState(currentProfile?.age || 26);
   const [height, setHeight] = useState(currentProfile?.height || "5'8\" (172 cm)");
+
+  const handleDobChange = (newDob: string) => {
+    setDateOfBirth(newDob);
+    const calculated = calculateAge(newDob);
+    setAge(calculated);
+  };
   const [surname, setSurname] = useState(currentProfile?.surname || '');
   const [gotra, setGotra] = useState(currentProfile?.gotra || 'Kashyapa');
   const [subCommunity, setSubCommunity] = useState(currentProfile?.subCommunity || 'Vadiyaraju Kshatriya');
@@ -102,6 +113,9 @@ export const MyProfileView: React.FC<MyProfileViewProps> = ({
           fullName,
           photoUrl: photoUrl.trim() || currentProfile.photoUrl,
           age: Number(age),
+          dateOfBirth,
+          timeOfBirth,
+          placeOfBirth,
           height,
           surname,
           gotra,
@@ -211,16 +225,66 @@ export const MyProfileView: React.FC<MyProfileViewProps> = ({
               />
             </div>
 
-            <div>
-              <label className="font-semibold text-stone-700 block mb-1">Age</label>
-              <input
-                type="number"
-                min="18"
-                max="70"
-                value={age}
-                onChange={(e) => setAge(Number(e.target.value))}
-                className="w-full p-2.5 border border-stone-300 rounded-xl"
-              />
+            {/* Date of Birth and Age */}
+            <div className="sm:col-span-2 bg-amber-50/50 p-3.5 rounded-2xl border border-amber-200 space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                <label className="font-bold text-stone-800 flex items-center space-x-1.5">
+                  <Calendar className="w-4 h-4 text-[#8A1022]" />
+                  <span>Date of Birth (పుట్టిన తేదీ) & Age</span>
+                </label>
+                {dateOfBirth && (
+                  <span className="text-[11px] font-semibold text-[#8A1022] bg-white px-2 py-0.5 rounded-md border border-amber-300">
+                    {formatFullDob(dateOfBirth)} • Calculated: <strong>{age} Years</strong>
+                  </span>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="sm:col-span-2">
+                  <label className="text-[11px] font-semibold text-stone-600 block mb-1">Date of Birth</label>
+                  <input
+                    type="date"
+                    required
+                    max={new Date(Date.now() - 18 * 365.25 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
+                    value={dateOfBirth}
+                    onChange={(e) => handleDobChange(e.target.value)}
+                    className="w-full p-2 bg-white border border-stone-300 rounded-xl"
+                  />
+                </div>
+                <div>
+                  <label className="text-[11px] font-semibold text-stone-600 block mb-1">Age in Years</label>
+                  <input
+                    type="number"
+                    min="18"
+                    max="70"
+                    value={age}
+                    onChange={(e) => setAge(Number(e.target.value))}
+                    className="w-full p-2 bg-white border border-stone-300 rounded-xl font-bold text-stone-800"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-amber-200/50">
+                <div>
+                  <label className="text-[11px] font-semibold text-stone-600 block mb-1">Time of Birth (Horoscope)</label>
+                  <input
+                    type="time"
+                    value={timeOfBirth}
+                    onChange={(e) => setTimeOfBirth(e.target.value)}
+                    className="w-full p-2 bg-white border border-stone-300 rounded-xl"
+                  />
+                </div>
+                <div>
+                  <label className="text-[11px] font-semibold text-stone-600 block mb-1">Place of Birth (Janma Sthalam)</label>
+                  <input
+                    type="text"
+                    value={placeOfBirth}
+                    onChange={(e) => setPlaceOfBirth(e.target.value)}
+                    placeholder="e.g. Bhimavaram / Hyderabad"
+                    className="w-full p-2 bg-white border border-stone-300 rounded-xl"
+                  />
+                </div>
+              </div>
             </div>
 
             <div>
@@ -381,6 +445,12 @@ export const MyProfileView: React.FC<MyProfileViewProps> = ({
               <p className="text-xs text-stone-600">
                 {currentProfile.age} Yrs • {currentProfile.height} • Gotra: <strong>{currentProfile.gotra}</strong>
               </p>
+              {currentProfile.dateOfBirth && (
+                <p className="text-xs text-stone-700 font-medium">
+                  Date of Birth: <strong className="text-[#680916]">{formatFullDob(currentProfile.dateOfBirth)}</strong>
+                  {currentProfile.timeOfBirth && ` at ${currentProfile.timeOfBirth}`}
+                </p>
+              )}
 
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1 text-xs">
                 <span className="px-2.5 py-0.5 bg-emerald-50 text-emerald-800 rounded-md font-semibold border border-emerald-200">

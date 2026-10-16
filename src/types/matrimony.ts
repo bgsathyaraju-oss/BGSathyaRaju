@@ -28,6 +28,8 @@ export interface MatrimonialProfile {
   gender: Gender;
   age: number;
   dateOfBirth: string;
+  timeOfBirth?: string;
+  placeOfBirth?: string;
   surname: string;
   fatherName: string;
   motherName: string;
